@@ -20,6 +20,35 @@ function getFormData() {
         timestamp: new Date().toLocaleString()
     };
 }
+// ========== 送出資料到 Google Sheet ==========
+let user = localStorage.getItem("user") || "未登入";
+
+async function sendData() {
+
+    let data = {
+        user: user,
+        barcode: document.getElementById("barcode").value,
+        location: document.getElementById("location").value,
+        putQty: document.getElementById("putQty").value,
+        recvQty: document.getElementById("recvQty").value,
+        expiry: document.getElementById("expiry").value,
+        lotNo: document.getElementById("lotNo").value,
+        putDate: document.getElementById("putDate").value
+    };
+
+    let res = await fetch(WRITE_API, {
+        method: "POST",
+        body: JSON.stringify(data)
+    });
+
+    let json = await res.json();
+
+    if (json.ok) {
+        alert("✅ 上架資料已成功寫入 Google Sheet！");
+    } else {
+        alert("❌ 寫入失敗，請稍後再試");
+    }
+}
 
 // ========== 上傳 Google Sheet ============
 document.getElementById("uploadBtn").onclick = async () => {
@@ -85,3 +114,4 @@ function stopCamera() {
     if (stream) stream.getTracks().forEach(t => t.stop());
     video.style.display = "none";
 }
+
