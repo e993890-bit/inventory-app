@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-<meta charset="UTF-8" />
-<title>藥局倉儲上架系統 Web App</title>
-<link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8">
+<title>藥局倉儲上架系統</title>
+<link rel="stylesheet" href="style.css">
+<script src="sheet-config.js"></script>
 </head>
 
 <body>
@@ -15,45 +16,38 @@
     <button id="endBtn" class="btn-danger">結束作業</button>
 
     <div class="info-box">
-        <p>開始時間：<span id="startTime">尚未開始</span></p>
-        <p>結束時間：<span id="endTime">尚未結束</span></p>
+        <p>開始時間：<span id="startTime"></span></p>
+        <p>結束時間：<span id="endTime"></span></p>
     </div>
 
-    <label>條碼（掃描或手動輸入）</label>
-    <input type="text" id="barcode">
+    <label>條碼（掃描或輸入）</label>
+    <input id="barcode">
 
     <label>儲位代碼</label>
-    <input type="text" id="location">
+    <input id="location">
 
     <label>上架數量</label>
-    <input type="number" id="putQty">
+    <input id="putQty" type="number">
 
-    <label>進貨數量</label>
-    <input type="number" id="recvQty">
+    <label>原箱收貨量</label>
+    <input id="recvQty" type="number">
 
     <label>有效日期</label>
-    <input type="date" id="expiry">
+    <input id="expiry" type="date">
 
     <label>批號</label>
-    <input type="text" id="lotNo">
+    <input id="lotNo">
 
     <label>上架日期</label>
-    <input type="date" id="putDate">
-<button class="btn-green" onclick="sendData()">送出上架資料</button>
+    <input id="putDate" type="date">
 
-    <button id="scanBtn" class="btn-blue">啟動相機掃描條碼</button>
-    <video id="scanner" width="100%" style="display:none; border-radius:10px;"></video>
+    <button class="btn-green" onclick="sendData()">送出上架資料</button>
 
-    <button id="uploadBtn" class="btn-green">上傳到 Google Sheet</button>
-    <button id="excelBtn" class="btn-primary">下載今日上架 Excel</button>
+    <p id="msg" style="color:red;"></p>
 
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
-<script src="sheet-config.js"></script>
 <script src="app.js"></script>
 
 </body>
 </html>
-
