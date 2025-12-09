@@ -1,9 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>藥局倉儲系統 登入</title>
+<link rel="stylesheet" href="style.css">
+<script src="sheet-config.js"></script>
+</head>
+
+<body>
+<header>藥局倉儲系統 登入</header>
+
+<div class="container">
+
+    <label>帳號</label>
+    <input id="acc" placeholder="請輸入帳號">
+
+    <label>密碼</label>
+    <input id="pwd" type="password" placeholder="請輸入密碼">
+
+    <button class="btn-primary" onclick="login()">登入</button>
+
+    <p id="msg" style="color:red; margin-top:10px;"></p>
+
+</div>
+
 <script>
 async function login() {
-    let acc = document.getElementById("acc").value;
-    let pwd = document.getElementById("pwd").value;
+    let acc = document.getElementById("acc").value.trim();
+    let pwd = document.getElementById("pwd").value.trim();
+
+    if (!acc || !pwd) {
+        document.getElementById("msg").textContent = "請輸入帳號與密碼";
+        return;
+    }
 
     let url = `${LOGIN_API}?acc=${acc}&pwd=${pwd}`;
+
     let res = await fetch(url);
     let json = await res.json();
 
@@ -15,3 +47,6 @@ async function login() {
     }
 }
 </script>
+
+</body>
+</html>
