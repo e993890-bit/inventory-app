@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-<meta charset="UTF-8">
-<title>藥局倉儲系統 登入</title>
-<link rel="stylesheet" href="style.css">
-<script src="https://e993890-bit.github.io/inventory-app/sheet-config.js?v=123"></script>
-</head>
+    <meta charset="UTF-8">
+    <title>藥局倉儲系統 登入</title>
+    <link rel="stylesheet" href="style.css">
 
+    <!-- 載入 API 配置檔（加入版本號避免 GitHub cache） -->
+    <script src="https://e993890-bit.github.io/inventory-app/sheet-config.js?v=20250102"></script>
+</head>
 <body>
+
 <header>藥局倉儲系統 登入</header>
 
 <div class="container">
@@ -20,30 +22,52 @@
 
     <button class="btn-primary" onclick="login()">登入</button>
 
-    <p id="msg" style="color:red; margin-top:10px;"></p>
-
+    <p id="msg" style="color:red;margin-top:10px;"></p>
 </div>
 
 <script>
 async function login() {
-    let acc = document.getElementById("acc").value.trim();
-    let pwd = document.getElementById("pwd").value.trim();
+    const acc = document.getElementById("acc").value.trim();
+    const pwd = document.getElementById("pwd").value.trim();
+    const msg = document.getElementById("msg");
+
+    msg.textContent = "";
 
     if (!acc || !pwd) {
-        document.getElementById("msg").textContent = "請輸入帳號與密碼";
+        msg.textContent = "請輸入帳號與密碼";
         return;
     }
 
-    let url = `${LOGIN_API}?acc=${acc}&pwd=${pwd}`;
+    if (typeof LOGIN_API === "undefined") {
+        msg.textContent = "系統初始化失敗（找不到 LOGIN_API），請重新整理！";
+        return;
+    }
 
-    let res = await fetch(url);
-    let json = await res.json();
+    const url = `${LOGIN_API}&acc=${encodeURIComponent(acc)}&pwd=${encodeURIComponent(pwd)}`;
 
-    if (json.ok) {
-        localStorage.setItem("user", acc);
-        window.location.href = "index.html";
-    } else {
-        document.getElementById("msg").textContent = json.msg;
+    try {
+        const res = await fetch(url, { method: "GET" });
+        const text = await res.text();   // Apps Script 先用 text() 再判斷 JSON
+
+        // 嘗試解析 JSON
+        let json;
+        try {
+            json = JSON.parse(text);
+        } catch (err) {
+            msg.textContent = "伺服器回傳格式錯誤：" + text;
+            return;
+        }
+
+        if (json.ok) {
+            // 登入成功 → 導向 index.html
+            localStorage.setItem("user", acc);
+            window.location.href = "index.html";
+        } else {
+            msg.textContent = json.msg || "帳號或密碼錯誤";
+        }
+
+    } catch (err) {
+        msg.textContent = "登入失敗，請稍後再試：" + err;
     }
 }
 </script>
