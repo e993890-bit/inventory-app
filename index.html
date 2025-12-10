@@ -8,6 +8,13 @@
 </head>
 
 <body>
+    <script>
+    // 沒有登入（localStorage 沒有 user）就強制跳回登入頁
+    if (!localStorage.getItem("user")) {
+        window.location.href = "login.html";
+    }
+</script>
+
 <header>藥局倉儲物流 上架管理系統</header>
 
 <div class="container">
@@ -51,3 +58,4 @@
 
 </body>
 </html>
+
