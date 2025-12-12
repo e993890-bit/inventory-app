@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>新增員工帳號</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="sheet-config.js"></script>
+</head>
+<body>
+<header>新增員工帳號</header>
+
+<div class="container">
+
+    <label>員工帳號</label>
+    <input id="newAcc" type="text" placeholder="例如：550">
+
+    <label>密碼</label>
+    <input id="newPwd" type="password" placeholder="例如：1234">
+
+    <button class="btn-primary" onclick="addUser()">新增員工</button>
+
+    <p id="msg" style="color:green;"></p>
+</div>
+
+<script>
+// SHA256 加密
+async function sha256(text) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(text);
+    const hash = await crypto.subtle.digest("SHA-256", data);
+    return [...new Uint8Array(hash)]
+        .map(b => b.toString(16).padStart(2, "0"))
+        .join("");
+}
+
+async function addUser() {
+    let acc = document.getElementById("newAcc").value.trim();
+    let pwd = document.getElementById("newPwd").value.trim();
+
+    if (!acc || !pwd) {
+        document.getElementById("msg").style.color = "red";
+        document.getElementById("msg").textContent = "請填寫帳號與密碼";
+        return;
+    }
+
+    const hashed = await sha256(pwd);
+
+    const url = `${API_URL}?type=addUser&acc=${acc}&pwd=${hashed}`;
+
+    let res = await fetch(url);
+    let json = await res.json();
+
+    if (json.ok) {
+        document.getElementById("msg").style.color = "green";
+        document.getElementById("msg").textContent = "成功新增員工！";
+    } else {
+        document.getElementById("msg").style.color = "red";
+        document.getElementById("msg").textContent = json.msg;
+    }
+}
+</script>
+
+</body>
+</html>
