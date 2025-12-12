@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>管理員登入</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="sheet-config.js"></script>
+</head>
+<body>
+<header>管理員登入</header>
+
+<div class="container">
+    <label>管理員密碼（後端設定）</label>
+    <input id="adminPwd" type="password" placeholder="請輸入管理員密碼">
+
+    <button class="btn-primary" onclick="adminLogin()">登入管理後台</button>
+
+    <p id="msg" style="color:red;"></p>
+</div>
+
+<script>
+function adminLogin() {
+    const pwd = document.getElementById("adminPwd").value.trim();
+    if (!pwd) {
+        document.getElementById("msg").textContent = "請輸入密碼";
+        return;
+    }
+
+    // 簡單比對即可（後端設定）
+    if (pwd === "admin123") {
+        window.location.href = "admin-panel.html";
+    } else {
+        document.getElementById("msg").textContent = "密碼錯誤";
+    }
+}
+</script>
+
+</body>
+</html>
